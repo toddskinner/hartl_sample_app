@@ -45,6 +45,16 @@ describe "Static pages" do
           expect(page).to have_selector("li##{item.id}", text:item.content)
         end
       end
+      
+      it "should include sidebar micropost counts" do
+        expect { pluralize(current_user.microposts.count, "micropost") }
+      end
+      
+      it "should include micropost pagination" do
+        31.times { FactoryGirl.create(:micropost, user: user, content: "foo bar baz") }
+        visit root_path
+        expect(page).to have_selector("div.pagination")
+      end 
     end
   end    
   
