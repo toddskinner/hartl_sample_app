@@ -55,6 +55,18 @@ describe "Authentication" do
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
       
+      describe "in the Relationships controller" do
+        describe "submitting to the create action" do 
+          before { post relationships_path }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+        
+        describe "submitting to the destroy action" do
+          before { delete relationship_path(1) }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+      end
+      
       describe "when attempting to visit a protected page" do 
         before do
           visit edit_user_path(user)
@@ -99,6 +111,16 @@ describe "Authentication" do
         describe "submitting to the update action" do 
           before { patch user_path(user) }
           specify { expect(response).to redirect_to(signin_path) }
+        end
+        
+        describe "visiting the following pages" do
+          before { visit following_user_path(user) }
+          it { should have_title('Sign in') }
+        end
+        
+        describe "visiting the followers page" do
+          before { visit followers_user_path(user) }
+          it { should have_title('Sign in') }
         end
       end
       
